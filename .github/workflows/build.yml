@@ -1,0 +1,116 @@
+name: Build and publish
+
+# Every push to main:
+#  1. publishes the web app to GitHub Pages (installable, works offline)
+#  2. builds the Windows installer + portable .exe and the Android .apk
+#  3. replaces the "latest" release with those files, so download links never change
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Web app (GitHub Pages)
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stamp offline cache version
+        run: sed -i "s/const VERSION = \"dev\";/const VERSION = \"${GITHUB_SHA::8}\";/" web/sw.js
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+  windows:
+    name: Windows (.exe)
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - name: Copy the web app into the desktop build
+        shell: bash
+        run: cp -r ../web ./web
+      - name: Set version
+        shell: bash
+        run: npm version --no-git-tag-version "1.0.${{ github.run_number }}"
+      - run: npm ci
+      - run: npm run dist:win
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: |
+            desktop/dist/Bready-Darkroom-Setup.exe
+            desktop/dist/Bready-Darkroom-Portable.exe
+          if-no-files-found: error
+
+  android:
+    name: Android (.apk)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Generate the Android project
+        run: bash scripts/prepare-android.sh ${{ github.run_number }}
+      - name: Use the shared signing key (lets new versions install over old ones)
+        run: mkdir -p ~/.android && cp android-keystore/debug.keystore ~/.android/debug.keystore
+      - name: Build APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk Bready-Darkroom.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: Bready-Darkroom.apk
+          if-no-files-found: error
+
+  release:
+    name: Publish downloads
+    needs: [windows, android]
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: Replace the "latest" release
+        run: |
+          ls -la out
+          gh release delete latest --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag || true
+          gh release create latest out/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "Bready Darkroom 1.0.${{ github.run_number }}" \
+            --notes "Windows: **Bready-Darkroom-Setup.exe** (installer) or **Bready-Darkroom-Portable.exe** (no install). Android: **Bready-Darkroom.apk**. Mac, iPhone and iPad: install from https://breadywebstudios.github.io/darkroom/ (Safari → Share → Add to Home Screen)." \
+            --latest

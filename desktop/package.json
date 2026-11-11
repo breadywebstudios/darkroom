@@ -1,0 +1,35 @@
+{
+  "name": "bready-darkroom-desktop",
+  "productName": "Bready Darkroom",
+  "version": "1.0.0",
+  "description": "Photo editor for web design",
+  "author": "Bready Web Studios",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win nsis portable --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "44.9.3",
+    "electron-builder": "26.18.1"
+  },
+  "build": {
+    "appId": "com.breadywebstudios.darkroom",
+    "productName": "Bready Darkroom",
+    "copyright": "Bready Web Studios",
+    "directories": { "output": "dist", "buildResources": "build" },
+    "files": ["main.js", "web/**", "build/icon.png", "package.json"],
+    "win": { "icon": "build/icon.ico" },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Bready Darkroom",
+      "artifactName": "Bready-Darkroom-Setup.${ext}"
+    },
+    "portable": { "artifactName": "Bready-Darkroom-Portable.${ext}" }
+  }
+}

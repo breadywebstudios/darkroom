@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Get Bready Darkroom</title>
+<meta name="description" content="Download Bready Darkroom for Windows or Android, or install it from the browser on Mac, iPhone and iPad.">
+<meta name="theme-color" content="#18181a">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+@font-face{font-family:"IBM Plex Sans";font-weight:400;font-display:swap;src:url(fonts/ibm-plex-sans-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:600;font-display:swap;src:url(fonts/ibm-plex-sans-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans Condensed";font-weight:600;font-display:swap;src:url(fonts/ibm-plex-sans-condensed-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url(fonts/ibm-plex-mono-latin-400-normal.woff2) format("woff2")}
+/* Layout: one narrow column, a platform card per row; same darkroom palette as the app. */
+:root{--bg:#18181a;--panel:#212124;--line:#36363b;--fg:#e9e7e4;--muted:#9b989f;--accent:#f0a04b;--ink:#1a1206;
+  --ui:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--ui);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 56px}
+main{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.top{display:flex;gap:16px;align-items:center}
+.top img{width:64px;height:64px;border-radius:14px;flex:none}
+h1{margin:0;font:600 30px/1.1 var(--cond);letter-spacing:.01em;text-wrap:balance}
+.lede{margin:4px 0 0;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.card h2{margin:0;font:600 18px var(--cond);letter-spacing:.02em}
+.card p,.card ol{margin:0;color:var(--muted);font-size:14px}
+.card ol{padding-left:20px}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-block;background:var(--accent);color:var(--ink);font-weight:600;text-decoration:none;border-radius:6px;padding:9px 14px}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tag{font:12px var(--mono);color:var(--muted)}
+.here{border-color:var(--accent)}
+footer{color:var(--muted);font-size:13px}
+footer a{color:var(--fg)}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <img src="icons/icon-192.png" alt="">
+    <div>
+      <h1>Bready Darkroom</h1>
+      <p class="lede">Photo editing for web design. Food and portrait filters, curves, levels, batch edits, web-ready export. Works offline. Your photos never leave your device.</p>
+    </div>
+  </div>
+
+  <div class="list">
+    <section class="card" id="win">
+      <h2>Windows</h2>
+      <p>Installs like any Windows program, with a Start menu icon. Windows may show “Windows protected your PC” the first time, because the app isn't code-signed. Click <b>More info → Run anyway</b>.</p>
+      <div class="row">
+        <a class="btn" href="https://github.com/breadywebstudios/darkroom/releases/latest/download/Bready-Darkroom-Setup.exe">Download installer</a>
+        <a class="btn ghost" href="https://github.com/breadywebstudios/darkroom/releases/latest/download/Bready-Darkroom-Portable.exe">Portable version (no install)</a>
+      </div>
+    </section>
+
+    <section class="card" id="android">
+      <h2>Android</h2>
+      <p>Download the APK, open it, and allow “Install unknown apps” for your browser when Android asks. Exports save to <span class="tag">Documents › Darkroom</span> and open the share sheet so you can send them to Photos or WhatsApp.</p>
+      <div class="row"><a class="btn" href="https://github.com/breadywebstudios/darkroom/releases/latest/download/Bready-Darkroom.apk">Download for Android</a></div>
+    </section>
+
+    <section class="card" id="web">
+      <h2>Mac, iPhone, iPad, Chromebook</h2>
+      <ol>
+        <li><b>Chrome or Edge</b> (Mac, Windows, Chromebook): open the app, then click <b>Install app</b> in the top bar, or the install icon in the address bar.</li>
+        <li><b>Safari on Mac</b>: File → Add to Dock.</li>
+        <li><b>iPhone / iPad</b>: open in Safari, tap Share, then <b>Add to Home Screen</b>.</li>
+      </ol>
+      <div class="row"><a class="btn" href="./">Open Darkroom</a></div>
+    </section>
+  </div>
+
+  <footer>Made by Bready Web Studios · <a href="https://github.com/breadywebstudios/darkroom/releases/latest">All downloads and release notes</a></footer>
+</main>
+<script>
+// highlight the card for the visitor's device
+const ua=navigator.userAgent,id=/Android/i.test(ua)?"android":/Windows/i.test(ua)?"win":"web";
+document.getElementById(id).classList.add("here");
+document.querySelector(".list").prepend(document.getElementById(id));
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "appId": "com.breadywebstudios.darkroom",
+  "appName": "Bready Darkroom",
+  "webDir": "web",
+  "backgroundColor": "#18181a",
+  "android": {
+    "backgroundColor": "#18181a",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SystemBars": { "insetsHandling": "css", "style": "DARK" }
+  }
+}

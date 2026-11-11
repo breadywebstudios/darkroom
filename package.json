@@ -1,0 +1,19 @@
+{
+  "name": "bready-darkroom",
+  "version": "1.0.0",
+  "description": "Bready Darkroom: photo editor for web design (web app, Android via Capacitor; Windows build lives in desktop/)",
+  "author": "Bready Web Studios",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "serve": "npx --yes http-server@14.1.1 web -c-1 -p 8080"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/cli": "8.5.3",
+    "@capacitor/core": "8.5.3",
+    "@capacitor/filesystem": "8.1.5",
+    "@capacitor/share": "8.0.3"
+  }
+}
