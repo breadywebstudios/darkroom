@@ -1802,5 +1802,6 @@ if("launchQueue" in window)window.launchQueue.setConsumer(async p=>{
 if(PLATFORM==="android"){const A=plug("App");if(A)Promise.resolve(A.addListener("backButton",()=>{
   if(!projSheet.hidden)projSheet.hidden=true;else if(!sheet.hidden)sheet.hidden=true;else if(cropMode)exitCrop(false);else A.exitApp();})).catch(()=>{});}
 </script>
+<script src="track.js" defer></script>
 </body>
 </html>
